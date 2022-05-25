@@ -10,6 +10,37 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TextEditingController _controllerAlcool = TextEditingController();
   final TextEditingController _controllerGasolina = TextEditingController();
+  String _textoResultado = '';
+
+  void _calcular() {
+    var precoAlcool = double.tryParse(_controllerAlcool.text);
+    var precoGasolina = double.tryParse(_controllerGasolina.text);
+
+    if (precoAlcool == null || precoGasolina == null) {
+      setState(() {
+        _textoResultado =
+            'Número inválido, digite números maiores que 0 e utilizando (.)!';
+      });
+      //debugPrint('Número inválido, digite números maiores que 0 e utilizando (.)!');
+    } else {
+      if ((precoAlcool / precoGasolina) >= 0.7) {
+        setState(() {
+          _textoResultado = 'Melhor abastecer com gasolina.';
+        });
+      } else {
+        setState(() {
+          _textoResultado = 'Melhor abastecer com álcool.';
+        });
+      }
+
+      //limparCampos();
+    }
+  }
+
+  void limparCampos() {
+    _controllerGasolina.text = '';
+    _controllerAlcool.text = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +98,7 @@ class _HomeState extends State<Home> {
                     onPrimary: Colors.white,
                     padding: const EdgeInsets.all(15),
                   ),
-                  onPressed: () {},
+                  onPressed: _calcular,
                   child: const Text(
                     'Calcular',
                     style: TextStyle(
@@ -76,11 +107,11 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
                 child: Text(
-                  'Resultado',
-                  style: TextStyle(
+                  _textoResultado,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
